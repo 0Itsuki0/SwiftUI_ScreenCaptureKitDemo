@@ -2,23 +2,43 @@
 //  ContentView.swift
 //  ScreenCaptureKitDemo
 //
-//  Created by Itsuki on 2025/07/22.
+//  Created by Itsuki on 2025/07/29.
 //
 
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
+    // - 0: Screenshot
+    // - 1: Screen Streaming / Capturing / Recording
+    @AppStorage("selectedMode") var selectedMode: Int = 0
 
-#Preview {
-    ContentView()
+    var body: some View {
+        NavigationStack {
+
+            Group {
+                switch self.selectedMode {
+                case 0:
+                    ScreenshotView()
+                default:
+                    ScreenCaptureView()
+                }
+            }
+            .toolbar(content: {
+                ToolbarItem(placement: .cancellationAction, content: {
+
+                    Picker(selection: $selectedMode, content: {
+                        Label("Screenshot", systemImage: "camera")
+                            .tag(0)
+                        
+                        Label("Streaming/Recording", systemImage: "camera.metering.center.weighted")
+                            .tag(1)
+                        
+                    }, label: {})
+                    .labelsHidden()
+                    .padding(.horizontal, 8)
+                })
+            })
+
+        }
+    }
 }
